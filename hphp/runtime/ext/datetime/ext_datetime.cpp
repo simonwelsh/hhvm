@@ -694,77 +694,12 @@ bool f_checkdate(int month, int day, int year) {
   return DateTime::IsValid(year, month, day);
 }
 
-Object f_date_add(const Object& datetime, const Object& interval) {
-  return datetime.getTyped<c_DateTime>()->
-    t_add(interval.getTyped<c_DateInterval>());
-}
-
-Variant f_date_create_from_format(const String& format,
-                                 const String& time,
-                                 const Object& timezone /* = null_object */) {
-  return c_DateTime::ti_createfromformat(format, time, timezone);
-}
-
 Variant f_date_parse_from_format(const String& format, const String& date) {
   Array ret = DateTime::Parse(format, date);
   if (ret.empty()) {
     return false;
   }
   return ret;
-}
-
-Variant f_date_create(const String& time /* = null_string */,
-                      const Object& timezone /* = null_object */) {
-  c_DateTime *cdt = NEWOBJ(c_DateTime)();
-  Object ret(cdt);
-  // Don't set the time here because it will throw if it is bad
-  cdt->t___construct();
-  if (time.empty()) {
-    // zend does this, so so do we
-    return ret;
-  }
-  auto dt = c_DateTime::unwrap(ret);
-  if (!dt->fromString(time, c_DateTimeZone::unwrap(timezone), nullptr, false)) {
-    return false;
-  }
-  return ret;
-}
-
-void f_date_date_set(const Object& object, int year, int month, int day) {
-  object.getTyped<c_DateTime>()->t_setdate(year, month, day);
-}
-
-Object f_date_diff(const Object& datetime,
-                   const Object& datetime2,
-                   bool absolute /* = false */) {
-  return datetime.getTyped<c_DateTime>()->
-    t_diff(datetime2.getTyped<c_DateTime>(), absolute);
-}
-
-void f_date_isodate_set(const Object& object, int year, int week,
-                        int day /* = 1 */) {
-  object.getTyped<c_DateTime>()->t_setisodate(year, week, day);
-}
-
-String f_date_format(const Object& object, const String& format) {
-  return c_DateTime::unwrap(object.getTyped<c_DateTime>())->
-                            toString(format, false);
-}
-
-Array f_date_get_last_errors() {
-  return c_DateTime::ti_getlasterrors();
-}
-
-Object f_date_interval_create_from_date_string(const String& time) {
-  return c_DateInterval::ti_createfromdatestring(time);
-}
-
-String f_date_interval_format(const Object& interval, const String& format_spec) {
-  return interval.getTyped<c_DateInterval>()->t_format(format_spec);
-}
-
-void f_date_modify(const Object& object, const String& modify) {
-  object.getTyped<c_DateTime>()->t_modify(modify);
 }
 
 Variant f_date_parse(const String& date) {
@@ -775,31 +710,12 @@ Variant f_date_parse(const String& date) {
   return ret;
 }
 
-void f_date_time_set(const Object& object, int hour, int minute,
-                     int second /* = 0 */) {
-  object.getTyped<c_DateTime>()->t_settime(hour, minute, second);
-}
-
 int64_t f_date_timestamp_get(const Object& datetime) {
   return datetime.getTyped<c_DateTime>()->t_gettimestamp();
 }
 
-Object f_date_timestamp_set(const Object& datetime, int64_t timestamp) {
-  return datetime.getTyped<c_DateTime>()->
-    t_settimestamp(timestamp);
-}
-
 Variant f_date_timezone_get(const Object& object) {
   return object.getTyped<c_DateTime>()->t_gettimezone();
-}
-
-void f_date_timezone_set(const Object& object, const Object& timezone) {
-  object.getTyped<c_DateTime>()->t_settimezone(timezone);
-}
-
-Object f_date_sub(const Object& datetime, const Object& interval) {
-  return datetime.getTyped<c_DateTime>()->
-    t_sub(interval.getTyped<c_DateInterval>());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
